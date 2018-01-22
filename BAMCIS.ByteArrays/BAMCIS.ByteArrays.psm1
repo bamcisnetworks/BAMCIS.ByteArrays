@@ -176,9 +176,9 @@ Function Remove-ByteArrayPadding {
         .OUTPUTS
             System.Byte[] or None
 
-
-
-
+		.NOTES
+            AUTHOR: Michael Haken
+			LAST UPDATE: 1/22/2018
     #>
     [CmdletBinding()]
     [OutputType([System.Byte[]])]
@@ -406,7 +406,6 @@ Function ConvertTo-OIDString {
 	[OutputType([System.String])]
 	Param(
         [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true)]
-		[ValidateLength(3, [System.Int64]::MaxValue)]
         [System.Byte[]]$InputObject
     )
 
@@ -421,6 +420,11 @@ Function ConvertTo-OIDString {
     }
 
     End {
+		if ($Bytes.Length -lt 3)
+		{
+			Write-Error -Exception (New-Object -TypeName System.ArgumentException("The input byte array must have a length of at least 3 bytes.")) -ErrorAction Stop
+		}
+
 		# Now that we have all the bytes to make the OID string, start processing them
         $Data = ""
 

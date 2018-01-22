@@ -2,6 +2,9 @@
 
 ## Revision History
 
+### 1.0.1.1
+Fixed input validation for ConvertTo-OIDString.
+
 ### 1.0.1.0
 Added ConvertTo-OIDString, ConvertFrom-OIDString, and Remove-ByteArrayPadding cmdlets.
 
