@@ -275,6 +275,100 @@ Function Remove-ByteArrayPadding {
     }
 }
 
+Function Invoke-ByteArrayTrim {
+	<#
+		.SYNOPSIS
+			Trims a byte array to the desired length.
+
+		.DESCRIPTION
+			This cmdlet trims a byte array down to the specified size. By default,
+			bytes are removed from the end of the array unless TrimStart is specified.
+
+		.PARAMETER InputObject
+			The byte array to trim.
+
+		.PARAMETER DesiredLength
+			The new desired length of the array. If the array is equal to or smaller in size
+			than the desired length, no actions are performed and the array is returned as is.
+
+		.PARAMETER TrimStart
+			If specified, bytes are trimmed from the beginning of the array instead of the end.
+
+		.EXAMPLE
+			$B = @(0x00, 0x01, 0x02)
+			$B = $B | Invoke-ByteArrayTrim -DesiredLenth 1
+
+			In this example, the byte array $B is trimmed down to a length of 1 and results in an array
+			containing @(0x00).
+
+		.EXAMPLE
+			$B = @(0x00, 0x01, 0x02)
+			$B = $B | Invoke-ByteArrayTrim -DesiredLenth 2 -TrimStart
+
+			In this example, the byte array $B is trimmed down to a length of 2 and results in an array
+			containing @(0x01, 0x02).
+
+		.INPUTS 
+			System.Byte[]
+
+		.OUTPUTS
+			System.Byte[]
+
+		.NOTES
+            AUTHOR: Michael Haken
+			LAST UPDATE: 1/22/2018
+	#>
+	[CmdletBinding()]
+	[OutputType([System.Byte[]])]
+	Param(
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
+		[ValidateNotNull()]
+		[System.Byte[]]$InputObject,
+
+		[Parameter(Mandatory = $true)]
+		[System.Int32]$DesiredLength,
+
+		[Parameter()]
+		[Switch]$TrimStart
+	)
+
+	Begin{
+		if ($DesiredLength -lt 0)
+		{
+			Write-Error -Exception (New-Object -TypeName System.Argument.Exception("The desired length cannot be less than 0.")) -ErrorAction Stop
+		}
+
+		[System.Byte[]]$Bytes = @()
+	}
+
+	Process {
+		$Bytes += $InputObject
+	}
+
+	End {
+
+		if ($DesiredLength -lt $Bytes.Length)
+		{
+			[System.Byte[]]$Temp = New-Object -TypeName System.Byte[] -ArgumentList $DesiredLength
+
+			$StartIndex = 0
+
+			if ($TrimStart)
+			{
+				$StartIndex = $Bytes.Length - $DesiredLength
+			}
+
+			[System.Array]::Copy($Bytes, $StartIndex, $Temp, 0, $DesiredLength)
+
+			Write-Output -InputObject $Temp
+		}
+		else
+		{
+			Write-Output -InputObject $Bytes
+		}
+	}
+}
+
 Function Out-Hex {
 	<#
         .SYNOPSIS

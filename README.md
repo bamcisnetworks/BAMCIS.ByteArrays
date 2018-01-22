@@ -2,6 +2,9 @@
 
 ## Revision History
 
+### 1.0.2.0
+Added the Invoke-ByteArrayTrim cmdlet.
+
 ### 1.0.1.1
 Fixed input validation for ConvertTo-OIDString.
 
