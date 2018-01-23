@@ -2,6 +2,9 @@
 
 ## Revision History
 
+### 1.0.2.1
+Fixed manifest.
+
 ### 1.0.2.0
 Added the Invoke-ByteArrayTrim cmdlet.
 
